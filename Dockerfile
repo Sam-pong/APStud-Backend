@@ -9,6 +9,11 @@ RUN dotnet publish -c Release -o /app
 # Runtime stage - .NET 9 ASP.NET
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
+# Allow environment variables from Render to flow into the container
+ENV JWT_SECRET=${JWT_SECRET}
+ENV SUPABASE_URL=${SUPABASE_URL}
+ENV SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+
 
 COPY --from=build /app .
 
