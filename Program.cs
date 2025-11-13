@@ -4,17 +4,26 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        policy
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithOrigins(
+                "https://ap-stud.vercel.app",
+                "http://localhost:8080"
+            );
     });
 });
+
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DBConnect>();
 
 var app = builder.Build();
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
+
 
 app.Use(async (context, next) =>
 {
